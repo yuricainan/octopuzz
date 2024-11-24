@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octopuzz</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script>
+        // Alternar entre login e registro
+        function toggleForm() {
+            var loginForm = document.getElementById("loginForm");
+            var registerForm = document.getElementById("registerForm");
+            var registerLink = document.getElementById("registerLink");
+
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                registerLink.innerHTML = "Não tem uma conta? <a href='#' onclick='toggleForm()'>Registre-se</a>";
+            } else {
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                registerLink.innerHTML = "Já tem uma conta? <a href='#' onclick='toggleForm()'>Faça login</a>";
+            }
+        }
+
+        // Efeito de Fade ao fazer login ou registro
+        function transitionToIndex() {
+            const loginWrapper = document.querySelector('.login-wrapper');
+            loginWrapper.classList.add('fade-out'); // Aplica fade-out
+
+            setTimeout(() => {
+                document.forms['loginForm'].submit(); // Submete o formulário após o efeito
+            }, 500); // Corresponde ao tempo do efeito no CSS
+        }
+    </script>
+</head>
+<body class="fade-in">
+
+    <div class="login-wrapper">
+        <!-- Caixa de login -->
+        <div class="login-container">
+            <div class="logo-inside-container">
+                <img src="/static/img/logo.png" alt="Octopuzz Logo">
+            </div>
+
+            <!-- Exibição de mensagens de erro ou sucesso -->
+            {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+            {% endif %}
+            {% if success_message %}
+            <div class="alert alert-success">{{ success_message }}</div>
+            {% endif %}
+
+            <!-- Formulário de Login -->
+            <form id="loginForm" method="POST" action="{{ url_for('login') }}" onsubmit="event.preventDefault(); transitionToIndex();">
+                <input type="hidden" name="action" value="login">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+
+            <!-- Formulário de Registro (inicialmente oculto) -->
+            <form id="registerForm" method="POST" action="{{ url_for('login') }}" style="display: none;">
+                <input type="hidden" name="action" value="register">
+                <div class="form-group">
+                    <label for="new_username">Novo Usuário</label>
+                    <input type="text" id="new_username" name="username" placeholder="Escolha um nome de usuário" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Senha</label>
+                    <input type="password" id="new_password" name="password" placeholder="Escolha uma senha" required>
+                </div>
+                <button type="submit" class="btn">Registrar</button>
+            </form>
+
+            <!-- Link para alternar entre login e registro -->
+            <div class="register-link" id="registerLink">
+                <p>Não tem uma conta? <a href="#" onclick="toggleForm()">Registre-se</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

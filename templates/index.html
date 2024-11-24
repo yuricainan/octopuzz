@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octopuzz CRM</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <!-- Link para o Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script>
+        // Alternar entre as seções do CRM
+        function showSection(section) {
+            document.querySelectorAll(".crm-section").forEach((el) => el.style.display = "none");
+            document.getElementById(section).style.display = "block";
+        }
+
+        // Drag-and-Drop para o Kanban
+        function initDragAndDrop() {
+            document.querySelectorAll('.kanban-card').forEach(card => {
+                card.setAttribute('draggable', true);
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', card.getAttribute('data-id'));
+                });
+            });
+
+            document.querySelectorAll('.kanban-column').forEach(column => {
+                column.addEventListener('dragover', (e) => e.preventDefault());
+                column.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const leadId = e.dataTransfer.getData('text/plain');
+                    const targetStatus = column.getAttribute('data-status');
+
+                    fetch(`/update_lead_status/${leadId}/${targetStatus}`, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                const card = document.querySelector(`.kanban-card[data-id="${leadId}"]`);
+                                if (card) {
+                                    column.querySelector('.kanban-items').appendChild(card);
+                                    card.classList.add('success-move');
+                                    setTimeout(() => card.classList.remove('success-move'), 500);
+                                }
+                            } else {
+                                alert('Erro ao atualizar o status do lead.');
+                            }
+                        })
+                        .catch(err => console.error('Erro:', err));
+                });
+            });
+        }
+
+        // Inicializa Drag-and-Drop ao carregar a página
+        window.onload = function() {
+            initDragAndDrop();
+            showSection('dashboard-section'); // Define o Dashboard como a tela inicial
+        };
+
+        // Funções para abrir e fechar o modal de adicionar lead ou contato
+        function openAddLeadModal() {
+            document.getElementById('add-lead-modal').style.display = 'flex';
+        }
+        function closeAddLeadModal() {
+            document.getElementById('add-lead-modal').style.display = 'none';
+        }
+
+        function openAddContactModal() {
+            document.getElementById('add-contact-modal').style.display = 'flex';
+        }
+        function closeAddContactModal() {
+            document.getElementById('add-contact-modal').style.display = 'none';
+        }
+
+        // Alternar menu lateral (expandir/recolher)
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+    </script>
+</head>
+<body class="fade-in">
+
+    <div class="crm-container">
+        <!-- Menu Lateral -->
+        <aside class="sidebar">
+            <button class="toggle-menu" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <ul>
+                <li>
+                    <a href="#" onclick="showSection('dashboard-section')">
+                        <i class="fas fa-tachometer-alt icon"></i><span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('agenda-section')">
+                        <i class="fas fa-calendar-alt icon"></i><span class="text">Agenda</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('leads-section')">
+                        <i class="fas fa-clipboard-list icon"></i><span class="text">Leads</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('empresas-section')">
+                        <i class="fas fa-building icon"></i><span class="text">Empresas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('contatos-section')">
+                        <i class="fas fa-user icon"></i><span class="text">Contatos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('produtos-section')">
+                        <i class="fas fa-cogs icon"></i><span class="text">Produtos</span>
+                    </a>
+                </li>
+            </ul>
+            <a href="{{ url_for('logout') }}" class="btn-logout">
+                <i class="fas fa-sign-out-alt icon"></i><span class="text">Logout</span>
+            </a>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Seção de Dashboard -->
+            <section id="dashboard-section" class="crm-section" style="display: block;">
+                <h2>Dashboard</h2>
+                <p>Conteúdo do dashboard...</p>
+            </section>
+
+            <!-- Seção de Agenda -->
+            <section id="agenda-section" class="crm-section" style="display: none;">
+                <h2>Agenda</h2>
+                <p>Conteúdo da agenda...</p>
+            </section>
+
+            <!-- Seção de Contatos -->
+            <section id="contatos-section" class="crm-section" style="display: none;">
+                <h2>Gerenciamento de Contatos</h2>
+                <!-- Lista de Contatos -->
+                <div class="contacts-list">
+                    <h3>Contatos Cadastrados</h3>
+                    <ul>
+                        {% for contact in contacts %}
+                        <li>
+                            <strong>{{ contact.name }}</strong> - {{ contact.email }}
+                            <small>(Empresa: {{ contact.company }})</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Botão de adicionar contato -->
+                <button class="add-lead-button" onclick="openAddContactModal()">+</button>
+
+                <!-- Modal para adicionar novo contato -->
+                <div id="add-contact-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddContactModal()">&times;</span>
+                        <h3>Adicionar Novo Contato</h3>
+                        <form action="{{ url_for('add_contact') }}" method="POST">
+                            <div class="form-group">
+                                <label for="contact-name">Nome</label>
+                                <input type="text" id="contact-name" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="company-id">Empresa</label>
+                                <select id="company-id" name="empresa_id" required>
+                                    <option value="">Selecione uma empresa</option>
+                                    {% for company in empresas %}
+                                    <option value="{{ company[0] }}">{{ company[1] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Adicionar Contato</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Empresas -->
+            <section id="empresas-section" class="crm-section" style="display: none;">
+                <h2>Gerenciamento de Empresas</h2>
+                <form action="{{ url_for('add_company') }}" method="POST">
+                    <div class="form-group">
+                        <label for="company-name">Nome da Empresa</label>
+                        <input type="text" id="company-name" name="nome" placeholder="Nome da empresa" required>
+                    </div>
+                    <button type="submit" class="btn">Adicionar Empresa</button>
+                </form>
+            </section>
+
+            <!-- Seção de Leads -->
+            <section id="leads-section" class="crm-section" style="display: none;">
+                <h2>Kanban de Leads</h2>
+                <div class="kanban-board">
+                    <!-- Colunas do Kanban -->
+                    <div class="kanban-column kanban-aberto" data-status="em_aberto">
+                        <h3>Em Aberto</h3>
+                        <div class="kanban-items">
+                            {% for lead in leads if lead[3] == 'em_aberto' %}
+                            <div class="kanban-card" data-id="{{ lead[0] }}">
+                                <h4>{{ lead[1] }}</h4>
+                                <p>{{ lead[2] }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="kanban-column kanban-negociacao" data-status="negociacao">
+                        <h3>Negociação</h3>
+                        <div class="kanban-items">
+                            {% for lead in leads if lead[3] == 'negociacao' %}
+                            <div class="kanban-card" data-id="{{ lead[0] }}">
+                                <h4>{{ lead[1] }}</h4>
+                                <p>{{ lead[2] }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="kanban-column kanban-andamento" data-status="em_andamento">
+                        <h3>Em Andamento</h3>
+                        <div class="kanban-items">
+                            {% for lead in leads if lead[3] == 'em_andamento' %}
+                            <div class="kanban-card" data-id="{{ lead[0] }}">
+                                <h4>{{ lead[1] }}</h4>
+                                <p>{{ lead[2] }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="kanban-column kanban-entregue" data-status="entregue">
+                        <h3>Entregue</h3>
+                        <div class="kanban-items">
+                            {% for lead in leads if lead[3] == 'entregue' %}
+                            <div class="kanban-card" data-id="{{ lead[0] }}">
+                                <h4>{{ lead[1] }}</h4>
+                                <p>{{ lead[2] }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Botão de adicionar lead -->
+                <button class="add-lead-button" onclick="openAddLeadModal()">+</button>
+
+                <!-- Modal para adicionar novo lead -->
+                <div id="add-lead-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddLeadModal()">&times;</span>
+                        <h3>Adicionar Novo Lead</h3>
+                        <form action="{{ url_for('add_lead') }}" method="POST">
+                            <div class="form-group">
+                                <label for="lead-name">Nome do Lead</label>
+                                <input type="text" id="lead-name" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lead-description">Descrição</label>
+                                <textarea id="lead-description" name="descricao"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="lead-status">Status</label>
+                                <select id="lead-status" name="status" required>
+                                    <option value="em_aberto">Em Aberto</option>
+                                    <option value="negociacao">Negociação</option>
+                                    <option value="em_andamento">Em Andamento</option>
+                                    <option value="entregue">Entregue</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Adicionar Lead</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

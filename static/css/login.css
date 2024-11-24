@@ -1,0 +1,163 @@
+/* Estilo geral do body */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #11113a;
+    color: #eaeaea;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    min-height: 100vh;
+    transition: opacity 0.5s ease;
+}
+
+/* Efeito de Fade */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* Estilo da página de login */
+.login-container {
+    background-color: #1a1a1a;
+    padding: 60px 40px; /* Melhorar a proporção de padding */
+    border-radius: 8px; /* Suavizar bordas */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra aprimorada */
+    width: 100%;
+    max-width: 400px; /* Definir largura máxima */
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Suavizar interações */
+}
+
+/* Leve zoom ao passar o mouse */
+.login-container:hover {
+    box-shadow: 0 8px 30px rgba(144, 116, 255, 0.8);
+    transform: translateY(-5px); /* Elevar levemente a caixa */
+}
+
+/* Estilo da logo */
+.logo-inside-container img {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Formulário de login */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #eaeaea;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #333;
+    color: #eaeaea;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input:focus {
+    background-color: #444;
+    border-color: #9074ff;
+    box-shadow: 0 0 10px #9074ff;
+}
+
+input.error {
+    border-color: #ff4d4f;
+}
+
+.error-message {
+    color: #ff4d4f;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+/* Botão de login */
+.btn {
+    padding: 15px;
+    background-color: #9074ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #745ccf;
+    transform: translateY(-2px); /* Leve elevação no hover */
+    box-shadow: 0 4px 15px rgba(144, 116, 255, 0.8);
+}
+
+/* Link "Registre-se" */
+.register-link {
+    margin-top: 15px;
+}
+
+.register-link a {
+    color: #9074ff;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #745ccf;
+    text-decoration: underline;
+}
+
+/* Mensagens de erro e sucesso */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.alert-danger {
+    background-color: #ff4d4f;
+    color: white;
+}
+
+.alert-success {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 40px 20px;
+        border-radius: 0;
+    }
+
+    .btn {
+        font-size: 1rem;
+    }
+
+    input {
+        font-size: 0.9rem;
+    }
+}

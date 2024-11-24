@@ -1,0 +1,330 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Efeito de Fade */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* Estilos do container principal */
+.crm-container {
+    display: flex;
+    height: 100vh;
+    background-color: #11113a;
+    color: #eaeaea;
+}
+
+/* Estilos do menu lateral (colocado no topo agora) */
+.sidebar {
+    width: 250px;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    transition: width 0.3s ease, padding 0.3s ease;
+    overflow: hidden;
+    position: sticky;
+    top: 0; /* Coloca o menu no topo */
+    height: 100%;
+    padding: 20px 0;
+    justify-content: flex-start; /* Alinha itens ao topo */
+}
+
+/* Estilo quando o menu é recolhido */
+.sidebar.collapsed {
+    width: 70px;
+    padding: 10px 0;
+}
+
+/* Itens do menu */
+.sidebar ul {
+    list-style-type: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    color: #eaeaea;
+    padding: 15px;
+    margin: 5px 0;
+    text-align: left;
+    text-decoration: none;
+    background-color: #333;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.sidebar ul li a .icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+    transition: margin 0.3s ease, font-size 0.3s ease;
+}
+
+.sidebar.collapsed ul li a .icon {
+    margin-right: 0;
+    font-size: 1.8em;
+}
+
+.sidebar ul li a .text {
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed ul li a .text {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar ul li a:hover {
+    background-color: #745ccf;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(144, 116, 255, 0.8);
+}
+
+/* Botão de Logout */
+.btn-logout {
+    background-color: #ff4d4f;
+    color: #eaeaea;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.btn-logout .icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.btn-logout .text {
+    transition: opacity 0.3s ease;
+}
+
+/* Remover efeito hover no botão logout */
+.btn-logout:hover {
+    background-color: #ff4d4f;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Botão de recolher/expandir o menu */
+.toggle-menu {
+    background: none;
+    border: none;
+    color: #eaeaea;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.toggle-menu:hover {
+    transform: scale(1.1);
+}
+
+/* Conteúdo Principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Título da seção */
+.main-content h2 {
+    font-size: 2em;
+    font-weight: bold;
+    color: #eaeaea;
+    margin-bottom: 20px;
+}
+
+/* Tabela de contatos cadastrados */
+.contacts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.contacts-table th,
+.contacts-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.contacts-table th {
+    background-color: #222;
+    color: #9074ff;
+    font-weight: bold;
+}
+
+.contacts-table tr:nth-child(even) {
+    background-color: #1a1a1a;
+}
+
+.contacts-table td {
+    color: #eaeaea;
+}
+
+/* Botão de adicionar contato no canto inferior direito */
+.add-contact-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #9074ff;
+    color: #eaeaea;
+    font-size: 2em;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.add-contact-button:hover {
+    background-color: #745ccf;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(144, 116, 255, 0.8);
+}
+
+/* Kanban Board */
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* Kanban Column */
+.kanban-column {
+    flex: 1;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    max-height: 75vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: transform 0.3s ease;
+}
+
+.kanban-column:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilos de Modal */
+.modal-content {
+    background-color: #1a1a1a;
+    margin: auto;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    color: #eaeaea;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-content h3 {
+    color: #9074ff;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea,
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #333;
+    color: #eaeaea;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #ff4d4f;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close:hover {
+    color: #d53a3c;
+}
+
+/* Cores das colunas do Kanban */
+.kanban-aberto {
+    border-top: 5px solid #FFEB3B;
+}
+
+.kanban-negociacao {
+    border-top: 5px solid #FF9800;
+}
+
+.kanban-andamento {
+    border-top: 5px solid #2196F3;
+}
+
+.kanban-entregue {
+    border-top: 5px solid #4CAF50;
+}
